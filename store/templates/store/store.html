@@ -1,0 +1,265 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+      aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+      aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+      aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active c-item">
+      <img src="{% static 'images/Banner1.png' %}" class="d-block w-100 img-fluid c-img" alt="...">
+    </div>
+    <div class="carousel-item c-item">
+      <img src="{% static 'images/Banner2.png' %}" class="d-block w-100 img-fluid c-img" alt="...">
+    </div>
+    <div class="carousel-item c-item">
+      <img src="{% static 'images/Banner3.png' %}" class="d-block w-100 img-fluid c-img" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+<!-- Featured Start -->
+<div class="container-fluid pt-5">
+  <div class="row px-xl-5 pb-3">
+    <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div class="d-flex align-items-center border mb-4" style="padding: 40px;">
+        <h1 class="fa fa-check text-primary m-2 mr-3"></h1>
+        <h5 class="font-weight-semi-bold m-0" style="font-family: 'Montserrat', sans-serif;" >Quality Product</h5>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div class="d-flex align-items-center border mb-4" style="padding: 40px;">
+        <h1 class="fa fa-shipping-fast text-primary m-2 mr-2"></h1>
+        <h5 class="font-weight-semi-bold m-0" style="font-family: 'Montserrat', sans-serif;" >Free Shipping</h5>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div class="d-flex align-items-center border mb-4" style="padding: 40px;">
+        <h1 class="fas fa-exchange-alt text-primary m-2 mr-3"></h1>
+        <h5 class="font-weight-semi-bold m-0" style="font-family: 'Montserrat', sans-serif;" margin-right="1px" >7-Day Return</h5>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+      <div class="d-flex align-items-center border mb-4" style="padding: 40px;">
+        <h1 class="fa fa-phone-volume text-primary m-2 mr-3"></h1>
+        <h5 class="font-weight-semi-bold m-0" style="font-family: 'Montserrat', sans-serif;" >24/7 Support</h5>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Featured End -->
+
+<h3  id="items" class="stylish-text" style="font-family: 'Montserrat', sans-serif;" id="items">ITEMS</h3>
+
+<div class="container-lg my-5">
+  <div class="row justify-content-center mb-3 g-3" id="category_wrapper">
+
+  </div>
+  <div class="row gy-4" id="product_wrapper">
+    <!-- {% for Product in products %}
+            <div class="col-md-4">
+                <div class="card h-100 box-element product">
+                    <img class="card-img-top" src="{{Product.imageURL}}" class="img-fluid">
+                    <div class="card-body">
+                      <h4 class="card-title">{{Product.name}}</h4>
+                      <hr>
+                      <button data-product={{Product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add To Cart</button>
+                      <h4 style="display: inline-block;float: right;">BDT {{Product.price|floatformat:2}} ৳</h4>
+                    </div>
+                </div>
+            </div>
+            {% endfor %} -->
+  </div>
+</div>
+
+
+
+{% endblock content %}
+
+
+
+{% block script %}
+
+
+<script>
+  // $(document).ready(function() {
+  
+  getProducts();
+  function getProducts(category_id="all") {
+    $.ajax({ //api request for fetching product
+      url: `/fetch-products/${category_id}`,  // URL of your Django view
+      type: 'GET',
+      dataType: 'json',
+      success: function (data) {
+    
+        // Handle the data received from the server
+        var products = data.products;
+
+        let product_list = "";
+        // Do something with the products (e.g., display them on the page)
+        for (var i = 0; i < products.length; i++) {
+          var product = products[i];
+          product_list +=
+            `<div class="col-md-4">
+                      <div class="card h-100 box-element product">
+                          <img class="card-img-top" src="${product.imageURL}" class="img-fluid">
+                          <div class="card-body">
+                            <h4 class="card-title">${product.name}</h4>
+                            <hr>
+                            <button type="button" data-product=${product.id} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add To Cart</button>
+                            <h4 style="display: inline-block;float: right;">BDT ${product.price} ৳</h4>
+                          </div>
+                      </div>
+                  </div>`;
+        }
+        document.getElementById("product_wrapper").innerHTML = product_list
+        var updateBtns = document.getElementsByClassName ('update-cart')
+        
+        // function updateUserOrder(productId,action){
+        //     debugger;
+        //     console.log('User is logged in , Sending Data....')
+
+        //     var url = '/update_item/'
+
+        //     fetch(url, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type' : 'application/json',
+        //             'X-CSRFTOKEN': csrftoken,
+        //         },
+        //         body: JSON.stringify({'productId': productId,'action': action})
+        //     })
+
+        //     .then((response)=>{
+        //         return response.json()
+        //     })
+
+
+        //     .then((data)=>{
+        //         debugger;
+        //         console.log('data', data)
+        //         let cart_update_count = parseInt(document.getElementById('cart-total').innerText) + 1;
+        //         document.getElementById('cart-total').innerText = cart_update_count ;
+
+        //         location.reload()
+        //     })
+
+            
+        // }
+
+
+function updateUserOrder(productId, action) {
+    debugger;
+    console.log('User is logged in, Sending Data....')
+
+    var url = '/update_item/'
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+            'X-CSRFTOKEN': csrftoken,
+        },
+        body: JSON.stringify({'productId': productId,'action': action})
+    })
+    .then((response) => {
+        return response.json()
+    })
+    .then((data) => {
+        debugger;
+        console.log('data', data)
+        
+        // Update the cart count on the page without reloading
+        let cart_update_count = parseInt(document.getElementById('cart-total').innerText) + 1;
+        document.getElementById('cart-total').innerText = cart_update_count;
+
+        // Remove location.reload() to prevent page reload
+        // location.reload()
+    });
+}
+
+
+        for(var i = 0; i<updateBtns.length; i++){
+
+            updateBtns[i].addEventListener('click',function(){
+              debugger;
+                var productId = this.dataset.product
+                var action = this.dataset.action
+                console.log('Click event triggered for productId:',productId, 'action:', action)
+
+                console.log('USER : ',user)
+                if (user == 'AnonymousUser'){
+                    addCookieItem(productId,action)
+                }else{
+                    updateUserOrder(productId,action)
+                }
+            })
+        }
+      },
+      error: function (error) {
+        console.error('Error:', error);
+      }
+    });
+
+  }
+
+  $.ajax({
+    url: '/fetch-category/',  // URL of your Django view
+    type: 'GET',
+    dataType: 'json',
+    success: function (data) {
+
+      // Handle the data received from the server
+      var categories = data.categories;
+
+      let category_list = `<button type="button" class="btn btn-success col-md-3 category_btn"  data-category_id = "all">All</button>`;
+      // Do something with the products (e.g., display them on the page)
+      for (var i = 0; i < categories.length; i++) {
+        var category = categories[i];
+        category_list +=
+          `<button type="button" class="btn btn-success col-md-3 category_btn rounded-pill mb-2" data-category_id="${category.id}">
+  ${category.name}
+</button>`;
+      }
+      document.getElementById("category_wrapper").innerHTML = category_list
+
+      var elements = document.querySelectorAll(".category_btn");
+      console.log(elements);
+
+        // Add a click event listener to each element
+      elements.forEach(function(element) {
+          element.addEventListener("click", function() {
+              // Get the value of the data-category_id attribute for the clicked element
+              var category_id = element.getAttribute("data-category_id");
+
+              getProducts(category_id);
+
+              // Use the category_id value as needed
+              console.log("Category ID: " + category_id);
+          });
+      });
+    },
+    error: function (error) {
+      console.error('Error:', error);
+    }
+  });
+  // });
+
+  // Get references to all elements with the class "myElement"
+   
+</script>
+{% endblock script %}

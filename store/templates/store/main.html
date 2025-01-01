@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- for responsivness accross every device -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+  <title>medinexconnect</title>
+
+  <!-- bootstrap css pulgin -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+  <!-- Favicon -->
+  <link href="img/favicon.ico" rel="icon">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+
+  <script type="text/javascript">
+    var user = "{{request.user}}";
+    // changes by dip video 3 time 23.43 sec
+    function getToken(name) {
+      let cookieValue = null;
+      // var cookieValue = null;
+
+      if (document.cookie && document.cookie !== "") {
+        var cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(
+              cookie.substring(name.length + 1)
+            );
+
+            break;
+          }
+        }
+      }
+
+      return cookieValue;
+    }
+    // Get the CSRF token using the function and assign it to the variable csrftoken
+    var csrftoken = getToken("csrftoken");
+
+
+    function getCookie(name) {
+
+      var cookieArr = document.cookie.split(";");
+
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split("=");
+
+        if (name == cookiePair[0].trim()) {
+          return decodeURIComponent(cookiePair[1]);
+        }
+      }
+      return null;
+    }
+
+    var cart = JSON.parse(getCookie('cart'))
+    if (cart == undefined) {
+      cart = {}
+      console.log('Cart Was Created')
+      document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    }
+
+    console.log('Cart :', cart)   
+  </script>
+
+</head>
+
+<body>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <!-- Your other head elements (meta tags, CSS links, etc.) -->
+      <style>
+          /* Add your navbar styles here */
+          .navbar-fixed {
+              position: fixed;
+              top: 0;
+              width: 100%;
+              z-index: 1000; /* Ensure the navbar is above other elements */
+          }
+      </style>
+  </head>
+  <body>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-1">
+          <!-- modified dark navbar -->
+          <div class="container-fluid">
+              <a href="{% url 'Store' %}">
+                  <div class="d-flex align-items-center justify-content-between">
+                      <img id="cart-icon" src="{% static 'images/nav_pic.png' %}" width="500" height="50" />
+                  </div>
+              </a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+              </button>
+  
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" style="font-family: 'Montserrat', sans-serif;"
+                              href="{% url 'Store' %}">STORE</a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" style="font-family: 'Montserrat', sans-serif;"
+                              href="{% url 'Store' %}#items">ITEM</a>
+                      </li>
+  
+                      <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" style="font-family: 'Montserrat', sans-serif;"
+                              href="{% url 'healthtips' %}">HEALTH TIPS</a>
+                      </li>
+                  </ul>
+                  <div class="py-0 mb-2 d-flex align-items-center justify-content-between">
+                      <a href="{% url 'Cart' %}">
+                          <div class="d-flex align-items-center justify-content-between">
+                              <img id="cart-icon" src="{% static 'images/cart.png' %}" />
+  
+                              <p id="cart-total">{{cartItems}}</p>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </nav>
+  
+      <script>
+          window.addEventListener("scroll", function () {
+              const navbar = document.querySelector(".navbar");
+              if (window.scrollY > 0) {
+                  navbar.classList.add("navbar-fixed");
+              } else {
+                  navbar.classList.remove("navbar-fixed");
+              }
+          });
+      </script>
+  </body>
+  </html>
+  
+
+
+
+  <br />
+  {% block content %} {% endblock content %}
+  </div>
+
+  <!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+  <div class="container py-5">
+    <div class="row g-5">
+      <div class="col-lg-3 col-md-6">
+        <h4 class="text-light mb-4">Address</h4>
+        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Currently Available - Jamal Khan, GEC, Nasirabad</p>
+        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+8801323927252</p>
+        <p class="mb-2"><i class="fa fa-envelope me-3"></i>medinexconnect@gmail.com</p>
+        <div class="d-flex pt-2">
+          <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+          <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+          <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+          <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4 class="text-light mb-4">Opening Hours</h4>
+        <h5 class="text-light" style="text-align: middle;">24/7</h5>
+
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4 class="text-light mb-4">Products We Sell</h4>
+        <a class="btn btn-link" href="">Antiseptic</a>
+        <a class="btn btn-link" href="">Beverages</a>
+        <a class="btn btn-link" href="">Medicine</a>
+        <a class="btn btn-link" href="">Medical Equipment</a>
+        <a class="btn btn-link" href="">Toiletries</a>
+
+
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4 class="text-light mb-4">We Accept</h4>
+        <div class="payment-logo text-right">
+            <img src="{% static 'images/COD.png' %}" alt="Payment Logo" width="150" height="150">
+            <br>
+            <h4 class="text-dark mb-4" >NB :- Online Payment Will Be Added Soon</h4>
+            <h4 class="text-dark mb-4" >Apologies For The Inconvenience</h4>
+        </div>
+    </div>
+   
+    </div>
+  </div>
+  <div class="container">
+    <div class="copyright">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+          <!-- &copy; <a class="border-bottom">medinexconnect</a>, All Right Reserved. -->
+
+
+          Designed By 
+          <a class="border-bottom">Faiyaz</a>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <div class="footer-menu">
+            <a href="">Home</a>
+            <a href="">Cookies</a>
+            <a href="">Help</a>
+            <a href="">FQAs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Footer End -->
+  
+
+  <!-- bootstrap js pulgin -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+    integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  {% block script %} {% endblock script %}
+
+</body>
+
+</html>
